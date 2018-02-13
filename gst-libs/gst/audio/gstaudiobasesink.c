@@ -1990,6 +1990,13 @@ gst_audio_base_sink_render (GstBaseSink * bsink, GstBuffer * buf)
   render_stop =
       gst_segment_to_running_time (&bsink->segment, GST_FORMAT_TIME, stop);
 
+  if (render_start == -1) {
+    GST_WARNING_OBJECT (sink,
+        "render_start running time outside of segment, clamping down to %"
+        GST_TIME_FORMAT, GST_TIME_ARGS (bsink->segment.start));
+    render_start = bsink->segment.start;
+  }
+
   GST_DEBUG_OBJECT (sink,
       "running: start %" GST_TIME_FORMAT " - stop %" GST_TIME_FORMAT,
       GST_TIME_ARGS (render_start), GST_TIME_ARGS (render_stop));
